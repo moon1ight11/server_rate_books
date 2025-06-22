@@ -13,15 +13,18 @@ func Router() {
 	// инициализация gin
 	r := gin.Default()
 
-	// маршруты
-	// r.GET("/all_rate", GetAllBooks)  							// запрос на все книги
-	// r.GET("/ten_old_books", GetTenOldBooks) 						// запрос на 10 старых книг
-	// r.GET("/top_books_by_year/:year_read", GetTopBooksByYear) 	// запрос на 10 книг по году прочтения
-	// r.GET("/ten_new_books", GetTenNewBooks) 						// запрос на 10 новых книг
-	// r.GET("/max_books", GetMAXBooks)								// запрос на максимальный рейтинг
-	// r.GET("/min_books", GetMINBooks)								// запрос на минимальный рейтинг
+	r.GET("/book_by_id/:id", GetBookByID)
+	r.GET("/all_books", GetAllBooks)
+	r.GET("/top_books_by_year/:year_read", GetTopBooksByYear)
+	r.GET("/ten_old_books", GetTenOldBooks)
+	r.GET("/ten_new_books", GetTenNewBooks)
+	r.GET("/max_rate_books", GetMAXBooks)
+	r.GET("/min_rate_books", GetMINBooks)
 
-	// r.POST("/add_new_book", AddNewBook)							// добавление новой книги
+	r.GET("/all_authors", GetAllAuthors)
 
+	r.POST("/new_book", AddNewBook)
+	r.POST("/new_author", AddNewAuthor)
+	
 	r.Run(":8080")
 }

@@ -9,6 +9,11 @@ import (
 	"rate_books/internal/model"
 )
 
+// одна книга по номеру
+func GetBookByID(c *gin.Context) {
+	
+}
+
 // все книги
 func GetAllBooks(c *gin.Context) {
 	config, err := pgx.ParseConfig(url)
@@ -32,7 +37,7 @@ func GetAllBooks(c *gin.Context) {
 	var books []model.Book
 	for rows.Next() {
 		var book model.Book
-		err := rows.Scan(&book.Title, &book.Author, &book.Year_public, &book.Year_read, &book.Rate)
+		err := rows.Scan(&book.Title, &book.Author.Author_name, &book.Year_public, &book.Year_read, &book.Rate)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -65,7 +70,7 @@ func GetMAXBooks(c *gin.Context) {
 	var books []model.Book
 	for rows.Next() {
 		var book model.Book
-		err := rows.Scan(&book.Title, &book.Author, &book.Year_public, &book.Year_read, &book.Rate)
+		err := rows.Scan(&book.Title, &book.Author.Author_name, &book.Year_public, &book.Year_read, &book.Rate)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -98,7 +103,7 @@ func GetMINBooks(c *gin.Context) {
 	var books []model.Book
 	for rows.Next() {
 		var book model.Book
-		err := rows.Scan(&book.Title, &book.Author, &book.Year_public, &book.Year_read, &book.Rate)
+		err := rows.Scan(&book.Title, &book.Author.Author_name, &book.Year_public, &book.Year_read, &book.Rate)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -131,7 +136,7 @@ func GetTenOldBooks(c *gin.Context) {
 	var books []model.Book
 	for rows.Next() {
 		var book model.Book
-		err = rows.Scan(&book.Title, &book.Author, &book.Year_public, &book.Year_read, &book.Rate)
+		err = rows.Scan(&book.Title, &book.Author.Author_name, &book.Year_public, &book.Year_read, &book.Rate)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -164,7 +169,7 @@ func GetTenNewBooks(c *gin.Context) {
 	var books []model.Book
 	for rows.Next() {
 		var book model.Book
-		err = rows.Scan(&book.Title, &book.Author, &book.Year_public, &book.Year_read, &book.Rate)
+		err = rows.Scan(&book.Title, &book.Author.Author_name, &book.Year_public, &book.Year_read, &book.Rate)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -199,7 +204,7 @@ func GetTopBooksByYear(c *gin.Context) {
 	var books []model.Book
 	for rows.Next() {
 		var book model.Book
-		err = rows.Scan(&book.Title, &book.Author, &book.Year_public, &book.Year_read, &book.Rate)
+		err = rows.Scan(&book.Title, &book.Author.Author_name, &book.Year_public, &book.Year_read, &book.Rate)
 		if err != nil {
 			log.Fatal(err)
 		}
