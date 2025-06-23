@@ -2,213 +2,51 @@ package handlers
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/jackc/pgx/v5"
-	"github.com/jackc/pgx/v5/stdlib"
-	"log"
 	"net/http"
-	"rate_books/internal/model"
+	"rate_books/internal/database"
 )
 
-// одна книга по номеру
-func GetBookByID(c *gin.Context) {
-	
-}
-
-// все книги
+// список всех книг
 func GetAllBooks(c *gin.Context) {
-	config, err := pgx.ParseConfig(url)
+	all_books, err := database.SelectAllBooks()
 	if err != nil {
-		log.Fatalf("Failed to parse database URL: %v", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
 	}
-
-	db := stdlib.OpenDB(*config)
-	defer db.Close()
-
-	rows, err := db.Query(`SELECT title, author, year_public, year_read, rate
-							FROM rate_books
-							ORDER BY rate DESC, author, year_public
-							`,
-	)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer rows.Close()
-
-	var books []model.Book
-	for rows.Next() {
-		var book model.Book
-		err := rows.Scan(&book.Title, &book.Author.Author_name, &book.Year_public, &book.Year_read, &book.Rate)
-		if err != nil {
-			log.Fatal(err)
-		}
-		books = append(books, book)
-	}
-	c.JSON(http.StatusOK, gin.H{"books": books})
+	c.JSON(http.StatusOK, gin.H{"all_books": all_books})
 }
 
-// максимальные оценки
+// список книг с максимальной оценкой
 func GetMAXBooks(c *gin.Context) {
-	config, err := pgx.ParseConfig(url)
+	max_books, err := database.SelectMAXBooks()
 	if err != nil {
-		log.Fatalf("Failed to parse database URL: %v", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
 	}
-
-	db := stdlib.OpenDB(*config)
-	defer db.Close()
-
-	rows, err := db.Query(`SELECT title, author, year_public, year_read, rate
-							FROM rate_books
-							WHERE rate in (select MAX(rate) FROM rate_books)
-							ORDER BY rate, author
-							`,
-	)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer rows.Close()
-
-	var books []model.Book
-	for rows.Next() {
-		var book model.Book
-		err := rows.Scan(&book.Title, &book.Author.Author_name, &book.Year_public, &book.Year_read, &book.Rate)
-		if err != nil {
-			log.Fatal(err)
-		}
-		books = append(books, book)
-	}
-	c.JSON(http.StatusOK, gin.H{"books": books})
+	c.JSON(http.StatusOK, gin.H{"max_books": max_books})
 }
 
-// минимальные оценки
+// список книг с максимальной оценкой
 func GetMINBooks(c *gin.Context) {
-	config, err := pgx.ParseConfig(url)
+	min_books, err := database.SelectMINBooks()
 	if err != nil {
-		log.Fatalf("Failed to parse database URL: %v", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
 	}
-
-	db := stdlib.OpenDB(*config)
-	defer db.Close()
-
-	rows, err := db.Query(`SELECT title, author, year_public, year_read, rate
-							FROM rate_books
-							WHERE rate in (select MIN(rate) FROM rate_books)
-							ORDER BY rate, author
-							`,
-	)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer rows.Close()
-
-	var books []model.Book
-	for rows.Next() {
-		var book model.Book
-		err := rows.Scan(&book.Title, &book.Author.Author_name, &book.Year_public, &book.Year_read, &book.Rate)
-		if err != nil {
-			log.Fatal(err)
-		}
-		books = append(books, book)
-	}
-	c.JSON(http.StatusOK, gin.H{"books": books})
+	c.JSON(http.StatusOK, gin.H{"min_books": min_books})
 }
 
 // топ-10 старых
 func GetTenOldBooks(c *gin.Context) {
-	config, err := pgx.ParseConfig(url)
+	old_books, err := database.SelectTopOldBooks()
 	if err != nil {
-		log.Fatalf("Failed to parse database URL: %v", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
 	}
-
-	db := stdlib.OpenDB(*config)
-	defer db.Close()
-
-	rows, err := db.Query(`SELECT title, author, year_public, year_read, rate
-							FROM rate_books
-							ORDER BY year_public, title
-							LIMIT 10
-							`,
-	)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer rows.Close()
-
-	var books []model.Book
-	for rows.Next() {
-		var book model.Book
-		err = rows.Scan(&book.Title, &book.Author.Author_name, &book.Year_public, &book.Year_read, &book.Rate)
-		if err != nil {
-			log.Fatal(err)
-		}
-		books = append(books, book)
-	}
-	c.JSON(http.StatusOK, books)
+	c.JSON(http.StatusOK, gin.H{"old_books": old_books})
 }
 
 // топ-10 новых
 func GetTenNewBooks(c *gin.Context) {
-	config, err := pgx.ParseConfig(url)
+	new_books, err := database.SelectTopNewBooks()
 	if err != nil {
-		log.Fatalf("Failed to parse database URL: %v", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err})
 	}
-
-	db := stdlib.OpenDB(*config)
-	defer db.Close()
-
-	rows, err := db.Query(`SELECT title, author, year_public, year_read, rate
-							FROM rate_books
-							ORDER BY year_public DESC, title
-							LIMIT 10
-							`,
-	)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer rows.Close()
-
-	var books []model.Book
-	for rows.Next() {
-		var book model.Book
-		err = rows.Scan(&book.Title, &book.Author.Author_name, &book.Year_public, &book.Year_read, &book.Rate)
-		if err != nil {
-			log.Fatal(err)
-		}
-		books = append(books, book)
-	}
-	c.JSON(http.StatusOK, books)
-}
-
-// топ по году прочтения
-func GetTopBooksByYear(c *gin.Context) {
-	config, err := pgx.ParseConfig(url)
-	if err != nil {
-		log.Fatalf("Failed to parse database URL: %v", err)
-	}
-
-	db := stdlib.OpenDB(*config)
-	defer db.Close()
-
-	year_r := c.Param("year_read")
-
-	rows, err := db.Query(`SELECT title, author, year_public, year_read, rate
-							FROM rate_books
-							WHERE year_read = $1
-							ORDER BY rate DESC, author
-							`, year_r,
-	)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer rows.Close()
-
-	var books []model.Book
-	for rows.Next() {
-		var book model.Book
-		err = rows.Scan(&book.Title, &book.Author.Author_name, &book.Year_public, &book.Year_read, &book.Rate)
-		if err != nil {
-			log.Fatal(err)
-		}
-		books = append(books, book)
-	}
-	c.JSON(http.StatusOK, books)
+	c.JSON(http.StatusOK, gin.H{"new_books": new_books})
 }

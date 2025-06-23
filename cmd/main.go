@@ -6,7 +6,10 @@ import (
 )
 
 func main() {
-	// подключение к базе данных, обновление миграций
+	// подключение к базе данных
+	database.Connection()
+
+	// обновление миграций
 	database.UppingMigrations()
 
 	// роутер
