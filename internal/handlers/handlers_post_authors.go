@@ -14,7 +14,7 @@ func PostNewAuthor(c *gin.Context) {
 		c.JSON((http.StatusBadRequest), gin.H{"error": err.Error()})
 	}
 
-	database.InsertNewAuthor()
+	database.InsertNewAuthor(Author)
 
 	c.JSON(http.StatusCreated, gin.H{"message": "Автор успешно добавлен"})
 }

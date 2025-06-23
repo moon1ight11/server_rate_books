@@ -5,11 +5,10 @@ import (
 )
 
 // запрос на добавление нового автора
-func InsertNewAuthor() error {
-	var Author model.Authors
+func InsertNewAuthor(a model.Authors) error {
 	query := "INSERT INTO authors (author,year_b,country) VALUES ($1, $2, $3)"
 
-	_, err := DB.Exec(query, Author.Author_name, Author.Year_born, Author.Country)
+	_, err := DB.Exec(query, a.Author_name, a.Year_born, a.Country)
 	if err != nil {
 		return err
 	}
