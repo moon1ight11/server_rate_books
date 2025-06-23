@@ -6,7 +6,6 @@ import (
 
 // запрос на все книги из списка
 func SelectAllBooks() ([]model.Book, error) {
-	defer DB.Close()
 	rows, err := DB.Query(`SELECT title, author, year_public, year_read, rate
 							FROM rate_books
 							ORDER BY rate DESC, author, year_public
@@ -20,7 +19,7 @@ func SelectAllBooks() ([]model.Book, error) {
 	var Books []model.Book
 	for rows.Next() {
 		var book model.Book
-		err := rows.Scan(&book.Title, &book.Author.Author_name, &book.Year_public, &book.Year_read, &book.Rate)
+		err := rows.Scan(&book.Title, &book.Author, &book.Year_public, &book.Year_read, &book.Rate)
 		if err != nil {
 			return nil, err
 		}
@@ -31,7 +30,6 @@ func SelectAllBooks() ([]model.Book, error) {
 
 // запрос на список книг с максимальной оценкой
 func SelectMAXBooks() ([]model.Book, error) {
-	defer DB.Close()
 	rows, err := DB.Query(`SELECT title, author, year_public, year_read, rate
 							FROM rate_books
 							WHERE rate in (select MAX(rate) FROM rate_books)
@@ -46,7 +44,7 @@ func SelectMAXBooks() ([]model.Book, error) {
 	var Books []model.Book
 	for rows.Next() {
 		var book model.Book
-		err := rows.Scan(&book.Title, &book.Author.Author_name, &book.Year_public, &book.Year_read, &book.Rate)
+		err := rows.Scan(&book.Title, &book.Author, &book.Year_public, &book.Year_read, &book.Rate)
 		if err != nil {
 			return nil, err
 		}
@@ -57,7 +55,6 @@ func SelectMAXBooks() ([]model.Book, error) {
 
 // запрос на список книг с минимальной оценкой
 func SelectMINBooks() ([]model.Book, error) {
-	defer DB.Close()
 	rows, err := DB.Query(`SELECT title, author, year_public, year_read, rate
 							FROM rate_books
 							WHERE rate in (select MIN(rate) FROM rate_books)
@@ -72,7 +69,7 @@ func SelectMINBooks() ([]model.Book, error) {
 	var Books []model.Book
 	for rows.Next() {
 		var book model.Book
-		err := rows.Scan(&book.Title, &book.Author.Author_name, &book.Year_public, &book.Year_read, &book.Rate)
+		err := rows.Scan(&book.Title, &book.Author, &book.Year_public, &book.Year_read, &book.Rate)
 		if err != nil {
 			return nil, err
 		}
@@ -83,7 +80,6 @@ func SelectMINBooks() ([]model.Book, error) {
 
 // запрос на топ-10 старых книг
 func SelectTopOldBooks() ([]model.Book, error) {
-	defer DB.Close()
 	rows, err := DB.Query(`SELECT title, author, year_public, year_read, rate
 							FROM rate_books
 							ORDER BY year_public, title
@@ -98,7 +94,7 @@ func SelectTopOldBooks() ([]model.Book, error) {
 	var Books []model.Book
 	for rows.Next() {
 		var book model.Book
-		err := rows.Scan(&book.Title, &book.Author.Author_name, &book.Year_public, &book.Year_read, &book.Rate)
+		err := rows.Scan(&book.Title, &book.Author, &book.Year_public, &book.Year_read, &book.Rate)
 		if err != nil {
 			return nil, err
 		}
@@ -109,7 +105,6 @@ func SelectTopOldBooks() ([]model.Book, error) {
 
 // запрос на топ-10 новых книг
 func SelectTopNewBooks() ([]model.Book, error) {
-	defer DB.Close()
 	rows, err := DB.Query(`SELECT title, author, year_public, year_read, rate
 							FROM rate_books
 							ORDER BY year_public DESC, title
@@ -124,7 +119,7 @@ func SelectTopNewBooks() ([]model.Book, error) {
 	var Books []model.Book
 	for rows.Next() {
 		var book model.Book
-		err = rows.Scan(&book.Title, &book.Author.Author_name, &book.Year_public, &book.Year_read, &book.Rate)
+		err = rows.Scan(&book.Title, &book.Author, &book.Year_public, &book.Year_read, &book.Rate)
 		if err != nil {
 			return nil, err
 		}

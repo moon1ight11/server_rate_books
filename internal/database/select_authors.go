@@ -6,7 +6,6 @@ import (
 
 // запрос на всех авторов из списка
 func SelectAllAuthors() ([]model.Authors, error) {
-	defer DB.Close()
 	rows, err := DB.Query(`SELECT author, year_b, country
 							FROM authors
 							ORDER BY author

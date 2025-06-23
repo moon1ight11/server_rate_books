@@ -8,6 +8,7 @@ import (
 func main() {
 	// подключение к базе данных
 	database.Connection()
+	defer database.DB.Close()
 
 	// обновление миграций
 	database.UppingMigrations()

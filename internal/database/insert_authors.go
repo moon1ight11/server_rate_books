@@ -6,7 +6,6 @@ import (
 
 // запрос на добавление нового автора
 func InsertNewAuthor() error {
-	defer DB.Close()
 	var Author model.Authors
 	query := "INSERT INTO authors (author,year_b,country) VALUES ($1, $2, $3)"
 
